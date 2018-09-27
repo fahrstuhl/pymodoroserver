@@ -19,6 +19,12 @@ class PymodoroServer(object):
         self.reset()
         self.start_work()
 
+    def toggle(self):
+        if self.state == "stopped":
+            self.start()
+        else:
+            self.stop()
+
     def start_work(self):
         self.state = "working"
         self.timer_started = datetime.now()
@@ -64,6 +70,10 @@ class PymodoroHTTPRequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
         elif self.path == "/stop":
             TIMER.stop()
+            self.send_response(200)
+            self.end_headers()
+        elif self.path == "/toggle":
+            TIMER.toggle()
             self.send_response(200)
             self.end_headers()
         elif self.path == "/get_state":

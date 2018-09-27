@@ -16,11 +16,14 @@ def main():
     parser.add_argument("-e", "--exit", action='store_true', help="Program exits with fail on stopped timer if this is set")
     parser.add_argument("--start", action='store_true')
     parser.add_argument("--stop", action='store_true')
+    parser.add_argument("--toggle", action='store_true')
     args = parser.parse_args()
     if args.start:
         run_command(args,"start")
     elif args.stop:
         run_command(args,"stop")
+    elif args.toggle:
+        run_command(args,"toggle")
     else:
         state = run_command(args, "get_state").text
         runtime = run_command(args, "get_runtime").text
