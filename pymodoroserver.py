@@ -86,7 +86,13 @@ class PymodoroHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'text/plain; charset=utf-8')
             self.end_headers()
-            response = str(TIMER.get_runtime()).encode('utf-8')
+            runtime = TIMER.get_runtime()
+            hours, remainder = divmod(runtime.seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            if hours > 0:
+                response = "{:02d}:{:02d}:{:02d}".format(hours, minutes, seconds).encode('utf-8')
+            else:
+                response = "{:02d}:{:02d}".format(minutes, seconds).encode('utf-8')
             self.wfile.write(response)
         else:
             self.send_response(404)
