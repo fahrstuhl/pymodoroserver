@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import logging
 from datetime import datetime, timedelta
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from argparse import ArgumentParser
@@ -10,8 +11,10 @@ from time import sleep
 class PymodoroServer(object):
 
     def __init__(self, work_duration, break_duration):
-        self.work_timer = Timer(60*work_duration, self.work_finished)
-        self.break_timer = Timer(60*break_duration, self.break_finished)
+        self.work_duration = 60*work_duration
+        self.break_duration = 60*break_duration
+        self.work_timer = Timer(work_duration, self.work_finished)
+        self.break_timer = Timer(break_duration, self.break_finished)
         self.state = "stopped"
         self.timer_started = datetime.min
 
@@ -28,11 +31,13 @@ class PymodoroServer(object):
     def start_work(self):
         self.state = "working"
         self.timer_started = datetime.now()
+        self.work_timer = Timer(self.work_duration, self.work_finished)
         self.work_timer.start()
 
     def start_break(self):
         self.state = "break"
         self.timer_started = datetime.now()
+        self.break_timer = Timer(self.break_duration, self.break_finished)
         self.break_timer.start()
 
     def reset(self):
